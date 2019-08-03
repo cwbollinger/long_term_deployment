@@ -93,21 +93,21 @@ class TerminalInterface(object):
                 'monitoring_tasks',
                 'record_wifi',
                 ['test_file'],
-                False), AgentDescription('erratic', 'erratic'))
+                True), AgentDescription('erratic', 'erratic'))
         elif key == '/':
             self.stop_continuous_task_proxy(Task(
                 '',
                 'monitoring_tasks',
                 'record_wifi',
                 ['test_file'],
-                False), AgentDescription('erratic', 'erratic'))
+                True), AgentDescription('erratic', 'erratic'))
         elif key == 'z':
             self.start_continuous_task_proxy(Task(
                 '',
                 'long_term_deployment',
                 'schedule_executor',
                 [],
-                False), AgentDescription('erratic', 'erratic'))
+                False), AgentDescription('fetch', 'fetch'))
 
     def update_screen(self, stdscr):
         stdscr.clear()
@@ -189,7 +189,7 @@ class TerminalInterface(object):
         while k != 'q' and not rospy.is_shutdown():
             k = None
             tmp = stdscr.getch()  # non blocking now
-            if tmp != -1:
+            if tmp != -1 and 0 <= tmp <= 255:
                 k = chr(tmp)
     
             # Initialization
