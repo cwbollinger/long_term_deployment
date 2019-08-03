@@ -1,17 +1,16 @@
 #! /usr/bin/env python
-from flask import Flask, request
-app = Flask(__name__)
+import os
+import BaseHTTPServer
+import SimpleHTTPServer
+server_address = ("", 8080)
 
-@app.route("/")
-def hello():
-        return "Hello World!"
+class MyRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
+    def translate_path(self, path):
+        if self.path == '/log_data/':
+            return os.environ['HOME'] + '/bags'
+        else:
+            return SimpleHTTPServer.SimpleHTTPRequestHandler.translate_path(self, path)
 
-
-def shutdown_server():
-    func = request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
-
-if __name__ == "__main__":
-    app.run(host= '0.0.0.0')
+os.chdir(os.environ['HOME'] + '/ros2djs')
+httpd = BaseHTTPServer.HTTPServer(server_address, MyRequestHandler)
+httpd.serve_forever()
